@@ -4,7 +4,7 @@ name: Run Channels Script
 
 on:
   schedule:
-    - cron: '0 10 * * *'   # Executa todo dia às 10h UTC
+    - cron: '0 15 * * *'   # Executa todo dia às 15h UTC // 12h BR
   workflow_dispatch:       # Permite rodar manualmente também
 
 jobs:
