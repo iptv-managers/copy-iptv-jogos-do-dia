@@ -1,6 +1,6 @@
 #Esse arquivo executa as atualizações de jogos todos os dias em meu servidor de teste
 # caso queira usar em seu github, basta cadastrar o arquivo .env como secret com o nome MY_ENV
-name: Run Movies Script
+name: Run Channels Script
 
 on:
   schedule:
