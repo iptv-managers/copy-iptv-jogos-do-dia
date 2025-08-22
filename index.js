@@ -37,7 +37,6 @@ async function fetchXtreamCategoryByName() {
             res.data.forEach(c => {
                 if(c.category_name === CATEGORY_NAME_SOURCE) {
                     STREAM_ID_SOURCE = c.category_id
-                    console.log(STREAM_ID_SOURCE);
                 }
             });
         }
@@ -122,17 +121,23 @@ async function main() {
                 const catIds = oldCats.map(c => c.id);
 
                 const [oldStreams] = await connection.query(
-                    "SELECT id FROM streams WHERE category_id IN (?)",
-                    [catIds]
+                    `SELECT id FROM streams WHERE category_id = ?`,
+                    `[${catIds[0]}]`
                 );
                 oldStreamIds = oldStreams.map(s => s.id);
 
                 if (oldStreams.length > 0) {
-                    await connection.query("DELETE FROM streams_servers WHERE stream_id IN (?)", [oldStreamIds]);
-                    await connection.query("DELETE FROM streams WHERE id IN (?)", [oldStreamIds]);
+                    await connection.query(`DELETE FROM streams_servers WHERE stream_id IN (${oldStreamIds.map(() => '?').join(',')})`,
+                        oldStreamIds
+                    );
+                    await connection.query(`DELETE FROM streams WHERE id IN (${oldStreamIds.map(() => '?').join(',')})`,
+                        oldStreamIds
+                    );
                 }
 
-                await connection.query("DELETE FROM streams_categories WHERE id IN (?)", [catIds]);
+                await connection.query(`DELETE FROM streams_categories WHERE id IN (${catIds.map(() => '?').join(',')})`,
+                    catIds
+                );
             }
 
             // --- Inserir a nova categoria de destino ---
